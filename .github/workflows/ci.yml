@@ -1,0 +1,44 @@
+name: School System CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Check the Django Backend
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: |
+          cd schoolmgmt
+          pip install -r requirements.txt
+      - name: Run Django Checks
+        run: |
+          cd schoolmgmt
+          python manage.py check
+
+  # Check the Next.js Frontend
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: |
+          cd school-frontend
+          npm install
+      - name: Run Build Check
+        run: |
+          cd school-frontend
+          npm run build
