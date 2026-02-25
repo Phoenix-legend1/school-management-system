@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import sys 
 from pathlib import Path
 from decouple import config
 
@@ -107,7 +107,7 @@ else:
             'PORT': config('DB_PORT', default='5432'),
         }
     }
-    
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000", # Next.js dev server
 ]
