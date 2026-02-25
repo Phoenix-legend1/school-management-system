@@ -84,17 +84,30 @@ WSGI_APPLICATION = 'schoolmgmt.wsgi.application'
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-    }
-}
+# Check if we are running in a test/check environment (like GitHub Actions)
+IS_TESTING = 'test' in sys.argv or 'check' in sys.argv
 
+if IS_TESTING:
+    # Use SQLite for GitHub Actions so it doesn't look for Postgres
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+else:
+    # Use your real PostgreSQL settings for your Fujitsu laptop
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
+    }
+    
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000", # Next.js dev server
 ]
